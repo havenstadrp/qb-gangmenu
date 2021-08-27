@@ -58,7 +58,7 @@ local menu_button4 = menu:AddButton({
     icon = '💰',
     label = 'Society Money',
     value = menu2,
-    description = 'View/Mange Society Money'
+    description = 'View/Manage Society Money'
 })
 local menu_button5 = menu2:AddButton({
     icon = '💲',
