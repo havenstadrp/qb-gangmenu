@@ -36,7 +36,7 @@ AddEventHandler("qb-gangmenu:server:withdrawMoney", function(amount)
         Accounts[gang] = 0
     end
 
-    if Accounts[gang] >= amount then
+    if Accounts[gang] >= amount and amount > 0 then
         Accounts[gang] = Accounts[gang] - amount
         Player.Functions.AddMoney("cash", amount)
     else
