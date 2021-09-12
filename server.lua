@@ -99,7 +99,7 @@ QBCore.Functions.CreateCallback('qb-gangmenu:server:GetEmployees', function(sour
     if not Accounts[gangname] then
         Accounts[gangname] = 0
     end
-    local players = exports.ghmattimysql:executeSync("SELECT * FROM `players` WHERE `gang` LIKE '%".. gangname .."%'")
+    local players = exports.oxmysql:fetchSync("SELECT * FROM `players` WHERE `gang` LIKE '%".. gangname .."%'")
     if players[1] ~= nil then
         for key, value in pairs(players) do
             local isOnline = QBCore.Functions.GetPlayerByCitizenId(value.citizenid)
@@ -138,13 +138,13 @@ AddEventHandler('qb-gangmenu:server:updateGrade', function(target, grade)
             TriggerClientEvent('QBCore:Notify', src, "Grade Does Not Exist", "error")
         end
     else
-        local player = exports.ghmattimysql:executeSync('SELECT * FROM players WHERE citizenid=@citizenid LIMIT 1', {['@citizenid'] = target})
+        local player = exports.oxmysql:fetchSync('SELECT * FROM players WHERE citizenid=@citizenid LIMIT 1', {['@citizenid'] = target})
         if player[1] ~= nil then
             Employee = player[1]
             local gang = QBCore.Shared.Gangs[Player.PlayerData.gang.name]
             local employeegang = json.decode(Employee.gang)
             employeegang.grade = gang.grades[data.grade]
-            exports.ghmattimysql:execute('UPDATE players SET gang=@gang WHERE citizenid=@citizenid', {['@gang'] = json.encode(employeegang), ['@citizenid'] = target})
+            exports.oxmysql:execute('UPDATE players SET gang=@gang WHERE citizenid=@citizenid', {['@gang'] = json.encode(employeegang), ['@citizenid'] = target})
             TriggerClientEvent('QBCore:Notify', src, "Grade Changed Successfully!", "success")
         else
             TriggerClientEvent('QBCore:Notify', src, "Player Does Not Exist", "error")
@@ -167,7 +167,7 @@ AddEventHandler('qb-gangmenu:server:fireEmployee', function(target)
             TriggerClientEvent('QBCore:Notify', src, "Contact Server Developer", "error")
         end
     else
-        local player = exports.ghmattimysql:executeSync('SELECT * FROM players WHERE citizenid=@citizenid LIMIT 1', {['@citizenid'] = target})
+        local player = exports.oxmysql:fetchSync('SELECT * FROM players WHERE citizenid=@citizenid LIMIT 1', {['@citizenid'] = target})
         if player[1] ~= nil then
             Employee = player[1]
             local gang = {}
@@ -179,7 +179,7 @@ AddEventHandler('qb-gangmenu:server:fireEmployee', function(target)
             gang.grade = {}
             gang.grade.name = nil
             gang.grade.level = 0
-            exports.ghmattimysql:execute('UPDATE players SET gang=@gang WHERE citizenid=@citizenid', {['@gang'] = json.encode(gang), ['@citizenid'] = target})
+            exports.oxmysql:execute('UPDATE players SET gang=@gang WHERE citizenid=@citizenid', {['@gang'] = json.encode(gang), ['@citizenid'] = target})
             TriggerClientEvent('QBCore:Notify', src, "Fired successfully!", "success")
             TriggerEvent('qb-log:server:CreateLog', 'bossmenu', 'Fire', "Successfully fired " .. target.source .. ' (' .. Player.PlayerData.gang.name .. ')', src)
         else
