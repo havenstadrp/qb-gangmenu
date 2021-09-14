@@ -103,9 +103,11 @@ end)
 -- Withdraw
 menu_button6:On("select", function()
     local result = LocalInput('Withdrawal Amount', 255, '')
-    if result ~= nil then
+    if result ~= nil and PlayerGang.name and PlayerGang.isboss then
         TriggerServerEvent("qb-gangmenu:server:withdrawMoney", tonumber(result))
         UpdateSociety()
+    else
+        QBCore.Functions.Notify('Not High Enough Rank', "error")
     end
 end)
 
@@ -162,10 +164,10 @@ CreateThread(function()
         if PlayerGang.name ~= nil then
             local pos = GetEntityCoords(PlayerPedId())
             for k, v in pairs(Config.Gangs) do
-                if k == PlayerGang.name and PlayerGang.isboss then
+                if k == PlayerGang.name then
                     if #(pos - v) < 1.0 then
                         sleep = 7
-                        DrawText3D(v, "~g~E~w~ - Boss Menu")
+                        DrawText3D(v, "~g~E~w~ - Gang Menu")
                         if IsControlJustReleased(0, 38) then
                             MenuV:OpenMenu(menu)
                         end
