@@ -163,7 +163,7 @@ AddEventHandler('qb-gangmenu:server:fireEmployee', function(target)
     local Employee = QBCore.Functions.GetPlayerByCitizenId(target)
     if Employee then
         if Employee.Functions.SetGang("none", '0') then
-            TriggerEvent('qb-log:server:CreateLog', 'bossmenu', 'bossmenu', 'Gang Fire', 'red', Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname .. ' successfully fired ' .. Employee.PlayerData.charinfo.firstname .. ' ' .. Employee.PlayerData.charinfo.lastname .. ' (' .. Player.PlayerData.gang.name .. ')', false)
+            TriggerEvent('qb-log:server:CreateLog', 'bossmenu', 'Gang Fire', 'red', Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname .. ' successfully fired ' .. Employee.PlayerData.charinfo.firstname .. ' ' .. Employee.PlayerData.charinfo.lastname .. ' (' .. Player.PlayerData.gang.name .. ')', false)
             TriggerClientEvent('QBCore:Notify', src, "Fired successfully!", "success")
             TriggerClientEvent('QBCore:Notify', Employee.PlayerData.source, "You Were Fired", "error")
         else
