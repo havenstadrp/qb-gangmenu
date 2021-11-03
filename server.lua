@@ -135,8 +135,7 @@ AddEventHandler('qb-gangmenu:server:updateGrade', function(target, grade)
     if Employee then
         if Employee.Functions.SetGang(Player.PlayerData.gang.name, grade) then
             TriggerClientEvent('QBCore:Notify', src, "Grade Changed Successfully!", "success")
-            TriggerClientEvent('QBCore:Notify', Employee.PlayerData.source, "Your Gang Grade Is Now [" .. grade .. "].",
-                "success")
+            TriggerClientEvent('QBCore:Notify', Employee.PlayerData.source, "Your Gang Grade Is Now [" .. grade .. "]", "success")
         else
             TriggerClientEvent('QBCore:Notify', src, "Grade Does Not Exist", "error")
         end
@@ -199,8 +198,8 @@ AddEventHandler('qb-gangmenu:server:giveJob', function(recruit)
     local Player = QBCore.Functions.GetPlayer(src)
     local Target = QBCore.Functions.GetPlayer(recruit)
     if Target and Target.Functions.SetGang(Player.PlayerData.gang.name, 0) then
-        TriggerClientEvent('QBCore:Notify', , src, 'You Recruited ' .. (Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname) .. ' To ' .. Player.PlayerData.job.label .. '', 'success')
-        TriggerClientEvent('QBCore:Notify', Target.PlayerData.source , 'You\'ve Been Recruited To ' .. Player.PlayerData.job.label .. '', 'success')
+        TriggerClientEvent('QBCore:Notify', src, 'You Recruited ' .. (Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname) .. ' To ' .. Player.PlayerData.job.label .. '', 'success')
+        TriggerClientEvent('QBCore:Notify', Target.PlayerData.source, 'You\'ve Been Recruited To ' .. Player.PlayerData.job.label .. '', 'success')
         TriggerEvent('qb-log:server:CreateLog', 'bossmenu', 'bossmenu', 'Recruit', 'yellow', Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname .. ' successfully recruited ' .. Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname .. ' (' .. Player.PlayerData.gang.name .. ')', false)
     end
 end)
