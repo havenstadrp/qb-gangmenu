@@ -44,8 +44,7 @@ AddEventHandler("qb-gangmenu:server:withdrawMoney", function(amount)
         return
     end
     SaveResourceFile(GetCurrentResourceName(), "./accounts.json", json.encode(Accounts), -1)
-    TriggerEvent('qb-log:server:CreateLog', 'bossmenu', 'Withdraw Money',
-        "Successfully withdrawn $" .. amount .. ' (' .. gang .. ')', src)
+    TriggerEvent('qb-log:server:CreateLog', 'bossmenu', 'Withdraw Money', 'lightgreen', Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname .. ' successfully withdrew $' .. amount .. ' (' .. gang .. ')', false)
 end)
 
 -- Deposit Money
@@ -66,8 +65,7 @@ AddEventHandler("qb-gangmenu:server:depositMoney", function(amount)
         return
     end
     SaveResourceFile(GetCurrentResourceName(), "./accounts.json", json.encode(Accounts), -1)
-    TriggerEvent('qb-log:server:CreateLog', 'bossmenu', 'Deposit Money',
-        "Successfully deposited $" .. amount .. ' (' .. gang .. ')', src)
+    TriggerEvent('qb-log:server:CreateLog', 'bossmenu', 'Deposit Money', 'lightgreen', Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname .. ' successfully deposited $' .. amount .. ' (' .. gang .. ')', false)
 end)
 
 RegisterServerEvent("qb-gangmenu:server:addAccountMoney")
@@ -166,8 +164,7 @@ AddEventHandler('qb-gangmenu:server:fireEmployee', function(target)
     local Employee = QBCore.Functions.GetPlayerByCitizenId(target)
     if Employee then
         if Employee.Functions.SetGang("none", '0') then
-            TriggerEvent('qb-log:server:CreateLog', 'bossmenu', 'Gang Fire', "Successfully fired " ..
-                GetPlayerName(Employee.PlayerData.source) .. ' (' .. Player.PlayerData.gang.name .. ')', src)
+            TriggerEvent('qb-log:server:CreateLog', 'bossmenu', 'Gang Fire', 'red', Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname .. ' successfully fired ' .. Employee.PlayerData.charinfo.firstname .. ' ' .. Employee.PlayerData.charinfo.lastname .. ' (' .. Player.PlayerData.gang.name .. ')', false)
             TriggerClientEvent('QBCore:Notify', src, "Fired successfully!", "success")
             TriggerClientEvent('QBCore:Notify', Employee.PlayerData.source, "You Were Fired", "error")
         else
@@ -188,8 +185,7 @@ AddEventHandler('qb-gangmenu:server:fireEmployee', function(target)
             gang.grade.level = 0
             exports.oxmysql:execute('UPDATE players SET gang = ? WHERE citizenid = ?', {json.encode(gang), target})
             TriggerClientEvent('QBCore:Notify', src, "Fired successfully!", "success")
-            TriggerEvent('qb-log:server:CreateLog', 'bossmenu', 'Fire',
-                "Successfully fired " .. target.source .. ' (' .. Player.PlayerData.gang.name .. ')', src)
+            TriggerEvent('qb-log:server:CreateLog', 'bossmenu', 'Fire', 'red', 'Successfully fired ' .. data.source .. ' (' .. Player.PlayerData.gang.name .. ')', false)
         else
             TriggerClientEvent('QBCore:Notify', src, "Player Does Not Exist", "error")
         end
@@ -203,14 +199,8 @@ AddEventHandler('qb-gangmenu:server:giveJob', function(recruit)
     local Player = QBCore.Functions.GetPlayer(src)
     local Target = QBCore.Functions.GetPlayer(recruit)
     if Target and Target.Functions.SetGang(Player.PlayerData.gang.name, 0) then
-        TriggerClientEvent('QBCore:Notify', src,
-            "You Recruited " .. (Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname) ..
-                " To " .. Player.PlayerData.gang.label .. "", "success")
-        TriggerClientEvent('QBCore:Notify', Target.PlayerData.source,
-            "You've Been Recruited To " .. Player.PlayerData.gang.label .. "", "success")
-        TriggerEvent('qb-log:server:CreateLog', 'bossmenu', 'Recruit',
-            "Successfully recruited " ..
-                (Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname) .. ' (' ..
-                Player.PlayerData.gang.name .. ')', src)
+        TriggerClientEvent('QBCore:Notify', , src, 'You Recruited ' .. (Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname) .. ' To ' .. Player.PlayerData.job.label .. '', 'success')
+        TriggerClientEvent('QBCore:Notify', Target.PlayerData.source , 'You\'ve Been Recruited To ' .. Player.PlayerData.job.label .. '', 'success')
+        TriggerEvent('qb-log:server:CreateLog', 'bossmenu', 'bossmenu', 'Recruit', 'yellow', Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname .. ' successfully recruited ' .. Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname .. ' (' .. Player.PlayerData.gang.name .. ')', false)
     end
 end)
