@@ -97,6 +97,7 @@ end)
 
 -- Get Employees
 QBCore.Functions.CreateCallback('qb-gangmenu:server:GetEmployees', function(source, cb, gangname)
+    local src = source
     local employees = {}
     if not Accounts[gangname] then
         Accounts[gangname] = 0
@@ -108,19 +109,19 @@ QBCore.Functions.CreateCallback('qb-gangmenu:server:GetEmployees', function(sour
             local isOnline = QBCore.Functions.GetPlayerByCitizenId(value.citizenid)
 
             if isOnline then
-                table.insert(employees, {
-                    source = isOnline.PlayerData.citizenid,
+                employees[#employees+1] = {
+                    src = isOnline.PlayerData.citizenid,
                     grade = isOnline.PlayerData.gang.grade,
                     isboss = isOnline.PlayerData.gang.isboss,
                     name = isOnline.PlayerData.charinfo.firstname .. ' ' .. isOnline.PlayerData.charinfo.lastname
-                })
+                }
             else
-                table.insert(employees, {
-                    source = value.citizenid,
+                employees[#employees+1] = {
+                    src = value.citizenid,
                     grade = json.decode(value.gang).grade,
                     isboss = json.decode(value.gang).isboss,
                     name = json.decode(value.charinfo).firstname .. ' ' .. json.decode(value.charinfo).lastname
-                })
+                }
             end
         end
     end
