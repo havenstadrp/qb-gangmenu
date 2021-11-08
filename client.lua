@@ -20,7 +20,7 @@ AddEventHandler('QBCore:Client:OnGangUpdate', function(GangInfo)
 end)
 
 -- MENU
-local menu = MenuV:CreateMenu(false, 'Boss Menu', 'topright', 155, 0, 0, 'size-125', 'none', 'menuv', 'main')
+local menu = MenuV:CreateMenu(false, 'Gang Boss Menu', 'topright', 155, 0, 0, 'size-125', 'none', 'menuv', 'main')
 local menu2 = MenuV:CreateMenu(false, 'Society money', 'topright', 155, 0, 0, 'size-125', 'none', 'menuv', 'society')
 local menu3 = MenuV:CreateMenu(false, 'Employee Management', 'topright', 155, 0, 0, 'size-125', 'none', 'menuv', 'employees')
 local menu4 = MenuV:CreateMenu(false, 'Recruit Menu', 'topright', 155, 0, 0, 'size-125', 'none', 'menuv', 'recruit')
@@ -40,7 +40,7 @@ local menu_button1 = menu:AddButton({
     icon = '🤝',
     label = 'Recruit',
     value = menu4,
-    description = 'Hire New Players'
+    description = 'Recruit New Members'
 })
 local menu_button2 = menu:AddButton({
     icon = '📦',
@@ -102,7 +102,7 @@ end)
 
 -- Withdraw
 menu_button6:On("select", function()
-    local result = LocalInput('Withdrawal Amount', 255, '')
+    local result = LocalInput('Withdrawal Amount', 16, '')
     if result ~= nil and PlayerGang.name and PlayerGang.isboss then
         TriggerServerEvent("qb-gangmenu:server:withdrawMoney", tonumber(result))
         UpdateSociety()
@@ -113,7 +113,7 @@ end)
 
 -- Deposit
 menu_button7:On("select", function()
-    local result = LocalInput('Deposit Amount', 255, '')
+    local result = LocalInput('Deposit Amount', 16, '')
     if result ~= nil then
         TriggerServerEvent("qb-gangmenu:server:depositMoney", tonumber(result))
         UpdateSociety()
@@ -130,8 +130,10 @@ menu_button:On("select", function()
                 value = v,
                 description = 'Employee',
                 select = function(btn)
+                    if PlayerGang.name and PlayerGang.isboss then
                     local select = btn.Value
-                    ManageEmployees(select)
+                        ManageEmployees(select)
+                    end
                 end
             })
         end
@@ -201,27 +203,29 @@ function ManageEmployees(employee)
             icon = '🔥',
             label = "Fire",
             value = "Fire",
-            description = "Fire " .. employee.name
+            description = "Release " .. employee.name
         }
     }
     for k, v in pairs(buttons) do
-        local menu_button9 = manageroptions:AddButton({
-            icon = v.icon,
-            label = v.label,
-            value = v.value,
-            description = v.description,
-            select = function(btn)
-                local values = btn.Value
-                if values == 'promote' then
-                    local result = LocalInput('New Grade Level', 255, '')
-                    if result ~= nil then
-                        TriggerServerEvent('qb-gangmenu:server:updateGrade', employee.source, tonumber(result))
+        if PlayerGang.name and PlayerGang.grade.level >= employee.level then
+            local menu_button9 = manageroptions:AddButton({
+                icon = v.icon,
+                label = v.label,
+                value = v.value,
+                description = v.description,
+                select = function(btn)
+                    local values = btn.Value
+                    if values == 'promote' then
+                        local result = LocalInput('New Grade Level', 3, '')
+                        if result ~= nil then
+                            TriggerServerEvent('qb-gangmenu:server:updateGrade', employee.empSource, tonumber(result))
+                        end
+                    else
+                        TriggerServerEvent('qb-gangmenu:server:fireEmployee', employee.empSource)
                     end
-                else
-                    TriggerServerEvent('qb-gangmenu:server:fireEmployee', employee.source)
                 end
-            end
-        })
+            })
+        end
     end
 end
 
