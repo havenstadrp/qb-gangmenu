@@ -40,7 +40,7 @@ AddEventHandler("qb-gangmenu:server:withdrawMoney", function(amount)
         Accounts[gang] = Accounts[gang] - amount
         Player.Functions.AddMoney("cash", amount)
     else
-        TriggerClientEvent('QBCore:Notify', src, {text="Mr. Geo says", caption="Not Enough Money"}, 'error')
+        TriggerClientEvent('QBCore:Notify', src, {text="Gang Menu", caption="Not Enough Money"}, 'error')
         return
     end
     SaveResourceFile(GetCurrentResourceName(), "./accounts.json", json.encode(Accounts), -1)
@@ -61,7 +61,7 @@ AddEventHandler("qb-gangmenu:server:depositMoney", function(amount)
     if Player.Functions.RemoveMoney("cash", amount) then
         Accounts[gang] = Accounts[gang] + amount
     else
-        TriggerClientEvent('QBCore:Notify', src, {text="Mr. Geo says", caption="Not Enough Money"}, "error")
+        TriggerClientEvent('QBCore:Notify', src, {text="Gang Menu", caption="Not Enough Money"}, "error")
         return
     end
     SaveResourceFile(GetCurrentResourceName(), "./accounts.json", json.encode(Accounts), -1)
@@ -134,17 +134,17 @@ AddEventHandler('qb-gangmenu:server:updateGrade', function(target, grade)
     local Player = QBCore.Functions.GetPlayer(src)
     local Employee = QBCore.Functions.GetPlayerByCitizenId(target)
     if grade == nil then
-        TriggerClientEvent('QBCore:Notify', src, {text="Mr. Geo says", caption="Invalid grade. Numbers only, with 0 being the lowest grade. What is this, amateur hour?"}, "error", 6000)
+        TriggerClientEvent('QBCore:Notify', src, {text="Gang Menu", caption="Invalid grade. Numbers only, with 0 being the lowest grade. What is this, amateur hour?"}, "error", 6000)
         return
     end
     if Player.PlayerData.gang.grade.level >= grade and grade <= Player.PlayerData.gang.grade.level then
         if Employee then
             if Employee.Functions.SetGang(Player.PlayerData.gang.name, grade) then
                 TriggerEvent('qb-log:server:CreateLog', 'gangmenu', 'Gang Grade Changed', 'lightgreen', Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname .. ' changed grade to ' .. grade .. ' for ' .. Employee.PlayerData.charinfo.firstname .. ' ' .. Employee.PlayerData.charinfo.lastname .. ' (' .. Player.PlayerData.gang.name .. ')', false)
-                TriggerClientEvent('QBCore:Notify', src, {text="Mr. Geo says", caption="Grade Changed Successfully!"}, "success")
-                TriggerClientEvent('QBCore:Notify', Employee.PlayerData.source, {text="Mr. Geo says", caption="Your new gang grade is now [" ..grade.."]."}, "success")
+                TriggerClientEvent('QBCore:Notify', src, {text="Gang Menu", caption="Grade Changed Successfully!"}, "success")
+                TriggerClientEvent('QBCore:Notify', Employee.PlayerData.source, {text="Gang Menu", caption="Your new gang grade is now [" ..grade.."]."}, "success")
             else
-                TriggerClientEvent('QBCore:Notify', src, {text="Mr. Geo says", caption="Grade Does Not Exist! We keep it simple around here, 0-10 only!"}, "error")
+                TriggerClientEvent('QBCore:Notify', src, {text="Gang Menu", caption="Grade Does Not Exist! We keep it simple around here, 0-10 only!"}, "error")
             end
         else
             local playerGang = '%' .. Player.PlayerData.gang.name .. '%'
@@ -153,18 +153,18 @@ AddEventHandler('qb-gangmenu:server:updateGrade', function(target, grade)
                 gangFinal = checkGang(Player.PlayerData.gang.name, grade)
                 if gangFinal ~= false then
                     TriggerEvent('qb-log:server:CreateLog', 'gangmenu', 'Gang Grade Changed', 'lightgreen', Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname .. ' changed grade to ' .. gangFinal.grade.name .. ' for '  .. target .. ' (' .. Player.PlayerData.gang.name .. ')', false)
-                    TriggerClientEvent('QBCore:Notify', src, {text="Mr. Geo says", caption="Grade Changed Successfully!"}, "success")
+                    TriggerClientEvent('QBCore:Notify', src, {text="Gang Menu", caption="Grade Changed Successfully!"}, "success")
                     exports.oxmysql:execute('UPDATE players SET gang = ? WHERE citizenid = ?', { json.encode(gangFinal), target })
                 else
-                    TriggerClientEvent('QBCore:Notify', src, {text="Mr. Geo says", caption="Invalid grade. Numbers only, with 0 being the lowest grade. What is this, amateur hour?"}, "error", 6000)
+                    TriggerClientEvent('QBCore:Notify', src, {text="Gang Menu", caption="Invalid grade. Numbers only, with 0 being the lowest grade. What is this, amateur hour?"}, "error", 6000)
                 end
             else
-                TriggerClientEvent('QBCore:Notify', src, {text="Mr. Geo says", caption="This person is not on your payroll"}, "error", 5000)
+                TriggerClientEvent('QBCore:Notify', src, {text="Gang Menu", caption="This person is not on your payroll"}, "error", 5000)
             end
         end
     else
         TriggerEvent('qb-log:server:CreateLog', 'gangmenu', 'Unfair Gang Change', 'lightgreen', Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname .. ' tried to changed grade to ' .. checkGang(Player.PlayerData.gang.name, grade).grade.name .. ' ('.. grade ..') for '  .. target .. ' (' .. Player.PlayerData.gang.name .. ') but failed because they are lower rank than the person or are trying to climb the ladder themselves.', true)
-        TriggerClientEvent('QBCore:Notify', src, {text="Mr. Geo says",caption="You are not authorized to do this. This has been reported to the feds."}, "error", 8000)
+        TriggerClientEvent('QBCore:Notify', src, {text="Gang Menu",caption="You are not authorized to do this. This has been reported to the feds."}, "error", 8000)
     end
 end)
 
@@ -178,14 +178,14 @@ AddEventHandler('qb-gangmenu:server:fireEmployee', function(target)
         if Player.PlayerData.gang.grade.level >= Employee.PlayerData.gang.grade.level then
             if Employee.Functions.SetGang("none", '0') then
                 TriggerEvent('qb-log:server:CreateLog', 'gangmenu', 'Gang Fire', 'red', Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname .. ' successfully fired ' .. Employee.PlayerData.charinfo.firstname .. ' ' .. Employee.PlayerData.charinfo.lastname .. ' (' .. Player.PlayerData.gang.name .. ')', false)
-                TriggerClientEvent('QBCore:Notify', src, {text="Mr. Geo says",caption="You have kicked out a member of your organization. We will be sending the records to " .. Player.PlayerData.gang.label .. "'s treasurer and the local charter."}, "error", 10000)
-                TriggerClientEvent('QBCore:Notify', Employee.PlayerData.source , {text="Mr. Geo says", caption="You were released from your gang. Think hard about your decisions and you're gonna realize this ain't the life for you."}, "error", 10000)
+                TriggerClientEvent('QBCore:Notify', src, {text="Gang Menu",caption="You have kicked out a member of your organization. We will be sending the records to " .. Player.PlayerData.gang.label .. "'s treasurer and the local charter."}, "error", 10000)
+                TriggerClientEvent('QBCore:Notify', Employee.PlayerData.source , {text="Gang Menu", caption="You were released from your gang. Think hard about your decisions and you're gonna realize this ain't the life for you."}, "error", 10000)
             else
-                TriggerClientEvent('QBCore:Notify', src, {text="Mr. Geo says", caption="Mail in a video raffle ticket with full details regarding this error."}, "error")
+                TriggerClientEvent('QBCore:Notify', src, {text="Gang Menu", caption="Mail in a video raffle ticket with full details regarding this error."}, "error")
             end
         else
             TriggerEvent('qb-log:server:CreateLog', 'gangmenu', 'Unfair Firing', 'red', Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname .. ' tried to fire ('.. target .. ') at (' .. Player.PlayerData.gang.name .. ') but failed because they are lower rank than the person. Something amiss is afoot.', true)
-            TriggerClientEvent('QBCore:Notify', src, {text="Mr. Geo says",caption="You are not authorized to do this. This has been reported to the " .. Player.PlayerData.gang.label .. " treasurer and the government."}, "error", 15000)
+            TriggerClientEvent('QBCore:Notify', src, {text="Gang Menu",caption="You are not authorized to do this. This has been reported to the " .. Player.PlayerData.gang.label .. " treasurer and the government."}, "error", 15000)
         end
     else
         local playerGang = '%' .. Player.PlayerData.gang.name .. '%'
@@ -195,12 +195,12 @@ AddEventHandler('qb-gangmenu:server:fireEmployee', function(target)
             if gangFinal ~= false then
                 exports.oxmysql:execute('UPDATE players SET gang = ? WHERE citizenid = ?', { json.encode(gangFinal), target })
                 TriggerEvent('qb-log:server:CreateLog', 'gangmenu', 'Fired Employee', 'red', Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname .. ' fired ('.. target .. ') at (' .. Player.PlayerData.gang.name .. ')', false)
-                TriggerClientEvent('QBCore:Notify', src, {text="Mr. Geo says",caption="You have kicked out a member of your organization. We will be sending the records to " .. Player.PlayerData.gang.label .. "'s treasurer and the local charter."}, "error", 10000)
+                TriggerClientEvent('QBCore:Notify', src, {text="Gang Menu",caption="You have kicked out a member of your organization. We will be sending the records to " .. Player.PlayerData.gang.label .. "'s treasurer and the local charter."}, "error", 10000)
             else
-                TriggerClientEvent('QBCore:Notify', src, {text="Mr. Geo says", caption="Something failed. Did you try turning it off and on again?"}, "error")
+                TriggerClientEvent('QBCore:Notify', src, {text="Gang Menu", caption="Something failed. Did you try turning it off and on again?"}, "error")
             end
         else
-            TriggerClientEvent('QBCore:Notify', src, {text="Mr. Geo says", caption="This person is not on your payroll."}, "error", 4000)
+            TriggerClientEvent('QBCore:Notify', src, {text="Gang Menu", caption="This person is not on your payroll."}, "error", 4000)
         end
 
         
@@ -217,8 +217,8 @@ AddEventHandler('qb-gangmenu:server:giveJob', function(recruit)
     local Target = QBCore.Functions.GetPlayer(recruit)
     if Player.PlayerData.gang.isboss == true then
         if Target and Target.Functions.SetGang(Player.PlayerData.gang.name, 0) then
-            TriggerClientEvent('QBCore:Notify', src, {text="Mr. Geo says", caption="You Recruited " .. (Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname) .. " To " .. Player.PlayerData.gang.label .. ""}, "success")
-            TriggerClientEvent('QBCore:Notify', Target.PlayerData.source , {text="Mr. Geo says", caption="You've Been Recruited To " .. Player.PlayerData.gang.label .. "!"}, "success")
+            TriggerClientEvent('QBCore:Notify', src, {text="Gang Menu", caption="You Recruited " .. (Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname) .. " To " .. Player.PlayerData.gang.label .. ""}, "success")
+            TriggerClientEvent('QBCore:Notify', Target.PlayerData.source , {text="Gang Menu", caption="You've Been Recruited To " .. Player.PlayerData.gang.label .. "!"}, "success")
             TriggerEvent('qb-log:server:CreateLog', 'gangmenu', 'Gang Recruit', 'yellow', Player.PlayerData.charinfo.firstname .. ' ' .. Player.PlayerData.charinfo.lastname .. ' successfully recruited ' .. Target.PlayerData.charinfo.firstname .. ' ' .. Target.PlayerData.charinfo.lastname .. ' (' .. Player.PlayerData.gang.name .. ')', false)
         end
     end
