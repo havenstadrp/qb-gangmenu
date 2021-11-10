@@ -1,17 +1,11 @@
+local QBCore = exports['qb-core']:GetCoreObject()
 local PlayerGang = {}
-local isLoggedIn = false
 local isInMenu = false
 local sleep
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded')
 AddEventHandler('QBCore:Client:OnPlayerLoaded', function()
-    isLoggedIn = true
     PlayerGang = QBCore.Functions.GetPlayerData().gang
-end)
-
-RegisterNetEvent('QBCore:Client:OnPlayerUnload')
-AddEventHandler('QBCore:Client:OnPlayerUnload', function()
-	isLoggedIn = false
 end)
 
 RegisterNetEvent('QBCore:Client:OnGangUpdate')
@@ -260,7 +254,7 @@ end
 
 function comma_value(amount)
     local formatted = amount
-    while true do  
+    while true do
         formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)", '%1,%2')
         if (k==0) then
             break

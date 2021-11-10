@@ -1,3 +1,4 @@
+local QBCore = exports['qb-core']:GetCoreObject()
 local Accounts = {}
 
 CreateThread(function()
@@ -203,9 +204,9 @@ AddEventHandler('qb-gangmenu:server:fireEmployee', function(target)
             TriggerClientEvent('QBCore:Notify', src, {text="Gang Menu", caption="This person is not on your payroll."}, "error", 4000)
         end
 
-        
-            
-       
+
+
+
     end
 end)
 
