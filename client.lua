@@ -162,7 +162,7 @@ CreateThread(function()
             for k, v in pairs(Config.Gangs) do
                 if k == PlayerGang.name then
                     if #(pos - v) < 1.0 then
-                        sleep = 7
+                        sleep = 5
                         DrawText3D(v, "~g~E~w~ - Gang Menu")
                         if IsControlJustReleased(0, 38) then
                             MenuV:OpenMenu(menu)
